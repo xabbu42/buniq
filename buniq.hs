@@ -50,7 +50,8 @@ main :: IO ()
 main = do
   args <- CMD.cmdArgs defaults
   content <- if (inputFile args /= "") then readFile (inputFile args) else getContents
-  hPutStrLn stderr $ "size: " ++ show (size `div` (8 * 1024)) ++ " hashnum: " ++ show hashnum
+  when (verbose args)
+    $ hPutStrLn stderr $ "size: " ++ show (size `div` (8 * 1024)) ++ " hashnum: " ++ show hashnum
   mapM_ putStrLn (bloomUniq (cheapHashes hashnum) size $ lines content)
   where
     (size, hashnum)  = suggestSizing (8 * 1024 * 1024) 0.0001
