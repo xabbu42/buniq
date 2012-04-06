@@ -1,0 +1,20 @@
+Name:                buniq
+Version:             0.1
+
+Synopsis:            uniq on unsorted files using bloom filter
+
+Description:         Implements a subset of the functionality of uniq on
+                     unsorted input using bloom filters.
+
+Homepage:            http://github.com/xabbu42/balance_game
+License:             BSD3
+License-file:        LICENSE
+Author:              Nathan Gass
+Maintainer:          gass@search.ch
+Build-type:          Simple
+Cabal-version:       >=1.2
+
+Executable buniq
+  Main-is: buniq.hs
+  Build-depends: base >= 4,bloomfilter,cmdargs,syb
+  
