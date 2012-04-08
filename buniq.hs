@@ -11,7 +11,6 @@ import qualified System.Console.CmdArgs as CMD
 import System.Console.CmdArgs ((&=))
 
 data Args = Args { doubles          :: Bool
-                 , uniques          :: Bool
                  , caseinsensitive  :: Bool
                  , ignoreFields     :: Int
                  , ignoreCharacters :: Int
@@ -24,9 +23,6 @@ data Args = Args { doubles          :: Bool
 defaults = Args { doubles = False 
                             &= CMD.name "d" 
                             &= CMD.help "Only output lines that are repeated in the input."
-                , uniques = False 
-                            &= CMD.name "u"
-                            &= CMD.help "Only output lines that are not repeated in the input."
                 , caseinsensitive = False 
                                     &= CMD.name "i"
                                     &= CMD.help "Case insensitive comparison of lines."
