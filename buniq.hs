@@ -2,7 +2,7 @@
 
 import Data.Generics hiding (GT)
 import System.IO
-import Control.Monad.ST
+import Control.Monad.ST.Lazy
 import Control.Monad
 import Data.BloomFilter
 import Data.BloomFilter.Easy (suggestSizing)
@@ -48,17 +48,20 @@ main = do
   content <- if (inputFile args /= "") then readFile (inputFile args) else getContents
   when (verbose args)
     $ hPutStrLn stderr $ "size: " ++ show (size `div` (8 * 1024)) ++ " hashnum: " ++ show hashnum
-  mapM_ putStrLn (bloomUniq (cheapHashes hashnum) size $ lines content)
+  mapM_ putStrLn (filter args $ lines content)
   where
     (size, hashnum)  = suggestSizing (8 * 1024 * 1024) 0.0001
+    hashes           = cheapHashes hashnum
+    filter args      = if doubles args
+                       then bloomFilter not hashes size . bloomFilter id hashes size
+                       else bloomFilter not hashes size
 
-bloomUniq :: (String -> [Hash]) -> Int -> [String] -> [String]
-bloomUniq hashes size xs = runST $ do
-  bloom <- newMB hashes size
-  filterM (testInsert bloom) xs
-  where 
-    testInsert bloom x = do
-          known <- x `elemMB` bloom
-          insertMB bloom x
-          return $ not known 
-
+bloomFilter :: (Bool -> Bool) -> (String -> [Hash]) -> Int -> [String] -> [String]
+bloomFilter func hashes size xs = runST $ do
+  bloom <- strictToLazyST $ newMB hashes size
+  filterM (filter bloom) xs
+  where
+    filter bloom x = strictToLazyST $ do
+      known <- x `elemMB` bloom
+      insertMB bloom x
+      return $ func known
