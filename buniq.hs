@@ -20,16 +20,16 @@ data Args = Args { doubles          :: Bool
                  }
           deriving (Show, Data, Typeable)
 
-defaults = Args { doubles = False 
-                            &= CMD.name "d" 
+defaults = Args { doubles = False
+                            &= CMD.name "d"
                             &= CMD.help "Only output lines that are repeated in the input."
-                , caseinsensitive = False 
+                , caseinsensitive = False
                                     &= CMD.name "i"
                                     &= CMD.help "Case insensitive comparison of lines."
-                , ignoreFields = 0 
+                , ignoreFields = 0
                                  &= CMD.name "f"
                                  &= CMD.help "Ignore the first num fields in each input line when doing comparisons. A field is a string of non-blank characters separated from adjacent fields by blanks.  Field numbers are one based, i.e., the first field is field one."
-                , ignoreCharacters = 0 
+                , ignoreCharacters = 0
                                      &= CMD.name "c"
                                      &= CMD.help "Ignore the first chars characters in each input line when doing comparisons.  If specified in conjunction with the -f option, the first chars characters after the first num fields will be ignored.  Character numbers are one based, i.e., the first character is character one."
                 , verbose = False
